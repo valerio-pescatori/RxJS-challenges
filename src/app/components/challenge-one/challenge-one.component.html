@@ -11,24 +11,24 @@
 <div #toTrack class="focus">
   <h2>Track focus in this block</h2>
   <p>
-    <select>
+    <select id="Select-option input">
       <option>Option 1</option>
       <option>Option 1</option>
     </select>
   </p>
 
   <p>
-    <input type="date" />
-    <button>I'm a button</button>
+    <input type="date" id="Date input" />
+    <button id="Date button">I'm a button</button>
   </p>
 
   <p>
     <label>
-      <input type="radio" />
+      <input type="radio" id="Radio btn 1" />
       Option 1
     </label>
     <label>
-      <input type="radio" />
+      <input type="radio" id="Radio btn 2" />
       Option 2
     </label>
   </p>
@@ -40,3 +40,5 @@
   </label>
   <button>I'm a button</button>
 </p>
+
+<h3>Focused element: {{ focused?.id ?? "Focus is outside the block" }}</h3>

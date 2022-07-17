@@ -2,19 +2,23 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  Inject,
   OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
 import {
+  exhaustMap,
   filter,
   fromEvent,
+  Observable,
   repeat,
   Subscription,
   take,
   takeUntil,
   tap,
 } from 'rxjs';
+import { PAGE_VISBILITY_SERVICE } from '../challenge-two/challenge-two.component';
 
 @Component({
   selector: 'app-challenge-one',
@@ -25,20 +29,25 @@ export class ChallengeOneComponent implements AfterViewInit, OnDestroy {
   @ViewChild('toTrack') toTrack!: ElementRef<HTMLDivElement>;
   subs: Subscription | undefined;
 
-  constructor() {}
+  focused: HTMLElement | null = null;
 
   ngAfterViewInit(): void {
-    let blur$ = fromEvent(document, 'focusin').pipe(
-      filter((e) => !this.toTrack.nativeElement.contains(e.target as Node)),
-      take(1),
-      tap(() => console.log('FOCUSOUT'))
-    );
-
+    // listen for focus out only after a focus in has occurred
     let focus$ = fromEvent(this.toTrack.nativeElement, 'focusin');
 
-    focus$
+    let blur$ = focus$.pipe(
+      exhaustMap(() =>
+        fromEvent(document, 'focusin').pipe(
+          filter((e) => !this.toTrack.nativeElement.contains(e.target as Node)),
+          take(1),
+          tap(() => (this.focused = null))
+        )
+      )
+    );
+
+    this.subs = focus$
       .pipe(
-        tap((e) => console.log('FOCUSED:', e)),
+        tap((e) => (this.focused = e.target as HTMLElement)),
         takeUntil(blur$),
         repeat()
       )

@@ -1,0 +1,13 @@
+<blockquote>
+  Show error message for 5 seconds if login has failed.
+
+  <p><strong>Bonus task:</strong></p>
+  Show user name instead of button upon successful login and disable button
+  during server request.
+</blockquote>
+<p *ngIf="login === 'fail'" class="error">Login failed</p>
+<p>
+  LOGIN: {{ login }}
+  <button #btn *ngIf="login != 'success'; else elseBlock">Submit</button>
+  <ng-template #elseBlock>{{ username }}</ng-template>
+</p>
